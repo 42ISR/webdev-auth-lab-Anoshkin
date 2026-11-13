@@ -1,5 +1,8 @@
+import axios from "axios";
+import {useUserStore} from "../store/useUserStore"
+
 const apiInstance = axios.create({
-    baseURL: "???",
+    baseURL: "https://api.kitek-pg.ru/api/marketplace/",
     headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -7,10 +10,10 @@ const apiInstance = axios.create({
 })
 
 apiInstance.interceptors.request.use((config) => {
-    const { session } = useUserStore.???()
+    const { session } = useUserStore.getState()
 
-    if (session?.???) {
-        config.headers.Authorization = `??? ${session.token}`
+    if (session?.token) {
+        config.headers.Authorization = `Bearer ${session.token}`
     }
 
     return config
@@ -32,11 +35,45 @@ const getItems = async () => {
 }
 
 const getStats = async () => {
-    const res = apiInstance.post("/stats")
+    const res = apiInstance.get("/stats")
     return res
 }
 
-const getItems = async () => {
-    const res = apiInstance.post("/items/${id}/bids")
+const getItemsBids = async (id) => {
+    const res = apiInstance.get("/items/${id}/bids")
     return res
+}
+
+const getMyBids = async () => {
+    const res = apiInstance.get("/bids/my")
+    return res
+}
+
+const sendItems = async () => {
+    const res = apiInstance.post("/items", item)
+    return res
+}
+
+const deleteItems = async (id) => {
+    const res = apiInstance.delete(`/items/${id}`)
+    return res
+}
+
+const createBid = async ({ id, amount }) => {
+    const res = await apiInstance.post(`/items/${id}/bids`, { amount })
+    return res.data
+}
+
+export const api = {
+    loginUser,
+    registerUser,
+    getItems,
+    getStats,
+    getItemsBids,
+    getMyBids,
+    sendItems,
+    deleteItems,
+    createBid,
+
+    
 }

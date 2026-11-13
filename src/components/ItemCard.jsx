@@ -1,21 +1,25 @@
-const ItemCard = () => {
+import {api } from "../api/api"
+import {useItemStore} from "../store/useItemStore"
+import {useUserStore} from "../store/useUserStore"
+
+const ItemCard = ({id, title, description, price, username, status, imageUrl, highestBid, bidCount}) => {
     return (
-        <div className="item-card">
-            <img class="item-image" />
+        <div className="item-card" >
+            <img class="item-image" src={imageUrl}/> 
             <div class="item-content">
-                <span class="status-badge status-active">Активное</span>
-                <h3 class="item-title">Название</h3>
-                <p class="item-description">Описание</p>
+                <span class="status-badge status-active">{status}</span>
+                <h3 class="item-title">{title}</h3>
+                <p class="item-description">{description}</p>
                 <div class="item-footer">
                     <div>
-                        <div class="item-price">5000 Р</div>
+                        <div class="item-price">{price}</div>
                         <div class="bid-info">
-                            5000 P
-                            <span class="bid-count">2</span>
+                            {highestBid}
+                            <span class="bid-count">{bidCount}</span>
                         </div>
                     </div>
                     <div class="item-meta">
-                        <span class="item-seller">Продавец: Пользователь</span>
+                        <span class="item-seller">{username}</span>
                     </div>
                 </div>
             </div>

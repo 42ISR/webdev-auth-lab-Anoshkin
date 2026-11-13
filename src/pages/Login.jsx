@@ -1,8 +1,34 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Button from "../components/Button"
 import Input from "../components/Input"
+import {useUserStore} from  "../store/useUserStore"
+import {api} from "../api/api";
+import { useState } from "react"
 
 const Login = () => {
+    const [error, setError] = useState("")
+    const navigate = useNavigate()
+    const { setSession } = useUserStore()
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setError("")
+
+        const user = {
+            username: e.target.username.value,
+            password: e.target.password.value,
+
+        }
+
+        try{
+            const data = await api.loginUser(user)
+            setSession(data.data)
+            navigate("/")
+        } catch (error) {
+            console.error(error)
+            setError(error.response.data.error)
+        }   
+    }
 
     return (
         <div className="container">
@@ -14,11 +40,9 @@ const Login = () => {
                     <p class="auth-subtitle">Войдите в свой аккаунт</p>
                 </div>
 
-                <div class="alert alert-error" id="error-alert">
-                    Неверное имя пользователя или пароль
-                </div>
+                {error && <div className="alert alert-error active">{error}</div>}
 
-                <form id="login-form">
+                <form onSubmit={handleSubmit} id="login-form">
                     <div class="form-group">
                         <label class="form-label">Имя пользователя</label>
                         <Input
